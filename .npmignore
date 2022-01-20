@@ -1,0 +1,10 @@
+.git/
+.vscode/
+build/**/*.test.d.ts
+build/**/*.test.d.ts.map
+build/**/*.test.js
+build/**/*.test.js.map
+coverage/
+jest.config.js
+node_modules/
+src/**/*.test.ts

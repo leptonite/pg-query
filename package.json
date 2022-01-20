@@ -1,0 +1,30 @@
+{
+   "name": "@leptonite/pg-query",
+   "version": "0.1.0",
+   "author": "Daniel Faber <mail@daniel-faber.de>",
+   "license": "WTFPL",
+   "description": "typesafe query tool for postgres",
+   "main": "build/index.js",
+   "types": "build/index.d.ts",
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/leptonite/pg-query.git"
+   },
+   "scripts": {
+      "build": "tsc -p .",
+      "test": "jest --no-cache --coverage"
+   },
+   "dependencies": {
+      "@leptonite/parse-int-strict": "0.1.0"
+   },
+   "devDependencies": {
+      "@types/jest": "27.4.0",
+      "@types/pg": "8.6.4",
+      "jest": "27.4.7",
+      "ts-jest": "27.1.3",
+      "typescript": "4.5.4"
+   },
+   "peerDependencies": {
+      "pg": "^8.7.1"
+   }
+}

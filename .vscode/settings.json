@@ -1,0 +1,10 @@
+{
+   "editor.tabSize": 3,
+   "files.exclude": {
+      ".git": true,
+      ".vscode": true,
+      "node_modules": true
+   },
+   "files.insertFinalNewline": true,
+   "typescript.format.semicolons": "insert"
+}
