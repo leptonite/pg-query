@@ -1,4 +1,4 @@
-import { asOptionalDate, asOptionalString, asSafeInt, asString } from './as';
+import { asOptionalDate, asOptionalString, asSafeInteger, asString } from './ResultValueTaggingFunctions';
 import { parseQuery } from './parseQuery';
 
 
@@ -45,7 +45,7 @@ describe('parseQuery', () => {
    test('no parameters but result values', () => {
       const pq = parseQuery`
          SELECT
-            id ${asSafeInt('id')},
+            id ${asSafeInteger('id')},
             name ${asString('name')},
             email ${asOptionalString('email')},
             lastlogin ${asOptionalDate('lastLogin')}

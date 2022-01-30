@@ -1,3 +1,5 @@
+export type ResultValueConverter<T> = (value: unknown) => T;
+
 export class ResultValueDescriptor<N extends string, T> {
 
    /**
@@ -7,7 +9,7 @@ export class ResultValueDescriptor<N extends string, T> {
 
    public constructor(
       public readonly propertyName: N,
-      public readonly converter: (resultValue: any) => T,
+      public readonly converter: ResultValueConverter<T>,
       public readonly acceptNull: boolean,
    ) {
       this.columnName = propertyName.toLowerCase();
