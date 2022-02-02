@@ -1,5 +1,5 @@
 import { type ClientBase } from 'pg';
-import { parseQuery, RVDorQP } from './parseQuery';
+import { parseQuery, QueryParameter, RVDorQP } from './parseQuery';
 
 import { ResultValueDescriptor } from './ResultValueDescriptor';
 
@@ -37,6 +37,15 @@ export class PostgresQueryTool {
    ) {
    }
 
+   public async exec<P extends Array<QueryParameter>>(sqlParts: TemplateStringsArray, ...params: P): Promise<number> {
+      const { sql, queryParams, resultValueDescriptors } = parseQuery(sqlParts, ...params);
+      if (resultValueDescriptors.size > 0) {
+         throw new Error('use query instead of exec to retrieve values from database');
+      }
+      const result = await this.pgClient.query(sql, queryParams);
+      return result.rowCount;
+   }
+
    public async query<P extends Array<RVDorQP>>(sqlParts: TemplateStringsArray, ...params: P): Promise<Array<ResultTypeOf<P>>> {
       const { sql, queryParams, resultValueDescriptors } = parseQuery(sqlParts, ...params);
       const result = await this.pgClient.query(sql, queryParams);
@@ -57,7 +66,7 @@ export class PostgresQueryTool {
       return rowMapper(result.rows[0]);
    }
 
-   public async queryOptionalSingle<P extends Array<RVDorQP>>(sqlParts: TemplateStringsArray, ...params: P): Promise<ResultTypeOf<P> | undefined> {
+   public async queryOptional<P extends Array<RVDorQP>>(sqlParts: TemplateStringsArray, ...params: P): Promise<ResultTypeOf<P> | undefined> {
       const { sql, queryParams, resultValueDescriptors } = parseQuery(sqlParts, ...params);
       const result = await this.pgClient.query(sql, queryParams);
 
