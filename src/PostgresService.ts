@@ -1,4 +1,5 @@
 import { type ClientBase, Pool, type PoolConfig } from 'pg';
+import { PostgresQueryTool } from '.';
 
 import { Log, nullLog } from './Log';
 
@@ -17,12 +18,13 @@ export class PostgresService {
       this.pool.on('error', error => this.log.error(`postgres pool error: ${error}`));
    }
 
-   public async withConnection<T>(dbTask: (pgClient: ClientBase) => Promise<T>): Promise<T> {
+   public async withConnection<T>(dbTask: (db: PostgresQueryTool) => Promise<T>): Promise<T> {
       this.log.debug(`acquiring postgres client from connection pool (idle=${this.pool.idleCount}, total=${this.pool.totalCount}, waiting=${this.pool.waitingCount})`);
       const pgClient = await this.pool.connect();
       this.log.debug(`acquired postgres client from connection pool (idle=${this.pool.idleCount}, total=${this.pool.totalCount}, waiting=${this.pool.waitingCount})`);
       try {
-         return await dbTask(pgClient);
+         const db = new PostgresQueryTool(pgClient);
+         return await dbTask(db);
       } finally {
          this.log.debug(`releasing postgres client to connection pool (idle=${this.pool.idleCount}, total=${this.pool.totalCount}, waiting=${this.pool.waitingCount})`);
          pgClient.release();
@@ -30,20 +32,20 @@ export class PostgresService {
       }
    }
 
-   public async withinTransaction<T>(dbTask: (pgClient: ClientBase) => Promise<T>): Promise<T> {
-      return await this.withConnection(async pgClient => {
+   public async withinTransaction<T>(dbTask: (db: PostgresQueryTool) => Promise<T>): Promise<T> {
+      return await this.withConnection(async db => {
          this.log.debug(`starting transaction`);
-         await pgClient.query('BEGIN TRANSACTION');
+         await db.exec`BEGIN TRANSACTION`;
          this.log.debug(`started transaction`);
          try {
-            const result = await dbTask(pgClient);
+            const result = await dbTask(db);
             this.log.debug(`committing transaction`);
-            await pgClient.query('COMMIT');
+            await db.exec`COMMIT`;
             this.log.debug(`committed transaction`);
             return result;
          } catch (e) {
             this.log.debug(`rolling back transaction`);
-            await pgClient.query('ROLLBACK');
+            await db.exec`ROLLBACK`;
             this.log.debug(`rolled back transaction`);
             throw e;
          }

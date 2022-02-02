@@ -6,7 +6,7 @@ import { ResultValueDescriptor } from './ResultValueDescriptor';
 
 export type ResultTypeOf<T extends Array<RVDorQP>> = ResultTypeHelper<T, {}>;
 
-export type ResultTypeHelper<T extends Array<RVDorQP>, Acc> =
+type ResultTypeHelper<T extends Array<RVDorQP>, Acc> =
    T extends [infer T0, ...infer Tn]
    ?
    ResultTypeHelper<
@@ -33,7 +33,7 @@ function createRowMapper<T>(resultValueDescriptors: Map<string, ResultValueDescr
 export class PostgresQueryTool {
 
    public constructor(
-      private readonly pgClient: ClientBase,
+      public readonly pgClient: ClientBase,
    ) {
    }
 
