@@ -1,0 +1,13 @@
+{
+   "editor.tabSize": 3,
+   "files.exclude": {
+      ".git": true,
+      ".vscode": true,
+      "node_modules": true
+   },
+   "files.insertFinalNewline": true,
+   "typescript.format.semicolons": "remove",
+   "typescript.preferences.quoteStyle": "single",
+   "typescript.tsdk": "node_modules/typescript/lib",
+   "typescript.tsserver.experimental.enableProjectDiagnostics": true
+}
